@@ -1,0 +1,17 @@
+# Environment variables
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Chat history
+chat_history.json
+
+# Virtual environment
+venv/
+env/
+ENV/
