@@ -38,9 +38,113 @@ client = get_openai_client()
 # Page config
 st.set_page_config(
     page_title="BIM-CHATBOT",
-    page_icon="🏗️",
+    page_icon="🔱",
     layout="wide"
 )
+
+# Barbados-themed custom CSS (Blue, Yellow, Black + Trident background)
+st.markdown("""
+<style>
+/* Trident SVG as background watermark */
+[data-testid="stMain"] {
+    background-color: #00267F;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 400' opacity='0.06'%3E%3Cpath d='M100 10 L100 390 M100 10 L70 80 Q100 60 130 80 Z M60 120 Q40 100 30 130 L80 110 Z M140 120 Q160 100 170 130 L120 110 Z M85 380 Q100 360 115 380 Z' fill='%23FFC726' stroke='%23FFC726' stroke-width='4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 300px auto;
+}
+
+/* Main text color */
+[data-testid="stMain"] * {
+    color: #FFFFFF;
+}
+
+/* Sidebar styling */
+[data-testid="stSidebar"] {
+    background-color: #000000 !important;
+}
+[data-testid="stSidebar"] * {
+    color: #FFC726 !important;
+}
+[data-testid="stSidebar"] .stButton > button {
+    background-color: #00267F !important;
+    color: #FFC726 !important;
+    border: 1px solid #FFC726 !important;
+    border-radius: 8px;
+}
+[data-testid="stSidebar"] .stButton > button:hover {
+    background-color: #FFC726 !important;
+    color: #000000 !important;
+}
+
+/* Chat input box */
+[data-testid="stChatInput"] textarea {
+    background-color: #001545 !important;
+    color: #FFFFFF !important;
+    border: 2px solid #FFC726 !important;
+    border-radius: 10px;
+}
+
+/* User chat bubble */
+[data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-user"]) {
+    background-color: #001A5E !important;
+    border: 1px solid #FFC726 !important;
+    border-radius: 12px;
+}
+
+/* Assistant chat bubble */
+[data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-assistant"]) {
+    background-color: #0D0D0D !important;
+    border: 1px solid #FFC726 !important;
+    border-radius: 12px;
+}
+
+/* Title styling */
+h1 {
+    color: #FFC726 !important;
+    text-shadow: 2px 2px 4px #000000;
+}
+
+/* Subheaders */
+h2, h3 {
+    color: #FFC726 !important;
+}
+
+/* Metrics */
+[data-testid="stMetricValue"] {
+    color: #FFC726 !important;
+}
+
+/* Selectbox / dropdown */
+[data-testid="stSelectbox"] div[data-baseweb="select"] {
+    background-color: #001545 !important;
+    border: 1px solid #FFC726 !important;
+}
+
+/* Text input */
+[data-testid="stTextInput"] input {
+    background-color: #001545 !important;
+    color: #FFC726 !important;
+    border: 1px solid #FFC726 !important;
+}
+
+/* File uploader */
+[data-testid="stFileUploader"] {
+    border: 2px dashed #FFC726 !important;
+    border-radius: 10px;
+}
+
+/* Dividers */
+hr {
+    border-color: #FFC726 !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #000000; }
+::-webkit-scrollbar-thumb { background: #FFC726; border-radius: 4px; }
+</style>
+""", unsafe_allow_html=True)
 
 # Chat history file management
 HISTORY_DIR = Path("chat_histories")
@@ -231,12 +335,6 @@ with st.sidebar:
         st.session_state.documents = []
         st.session_state.images = []
         st.rerun()
-    
-    # --- Token Usage ---
-    st.divider()
-    st.write("**Token Usage**")
-    total_chars = sum(len(msg["content"]) for msg in st.session_state.messages)
-    st.metric("Estimated Tokens", f"~{total_chars // 4}")
 
 # Main chat interface
 st.title("🏗️ BIM-CHATBOT")
@@ -323,7 +421,80 @@ if prompt := st.chat_input("Ask me anything..."):
                     f"FORMATTING:\n"
                     f"- Use headers, bullet points, and bold text for readability.\n"
                     f"- Keep explanations clear and well-organized.\n"
-                    f"- Adapt your explanation depth to the complexity of the question."
+                    f"- Adapt your explanation depth to the complexity of the question.\n\n"
+                    f"BARBADOS EXPERT KNOWLEDGE:\n"
+                    f"You are also a Barbados travel, culture, and lifestyle expert. When anyone asks about Barbados, provide rich, detailed, and helpful answers.\n\n"
+                    f"HISTORY OF BARBADOS:\n"
+                    f"- Barbados was inhabited by Arawak and Carib peoples before European contact.\n"
+                    f"- The Portuguese visited in the 1500s and named it 'Los Barbados' (the bearded ones) after the fig trees.\n"
+                    f"- British colonized Barbados in 1627. It became a major sugar colony using enslaved African labor.\n"
+                    f"- Bussa's Rebellion (1816) was a major slave uprising. Emancipation came in 1834.\n"
+                    f"- Barbados gained independence on November 30, 1966 (Independence Day is a national holiday).\n"
+                    f"- Barbados became a Republic on November 30, 2021, removing the British monarch as head of state.\n"
+                    f"- Dame Sandra Mason became the first President. The Prime Minister is Mia Amor Mottley.\n"
+                    f"- National heroes include Errol Barrow, Sir Garfield Sobers, Sir Frank Walcott, Bussa, Sarah Ann Gill, Samuel Jackman Prescod, Charles Duncan O'Neal, Clement Payne, Sir Hugh Springer, and Rihanna.\n\n"
+                    f"BEACHES & PLACES TO VISIT:\n"
+                    f"- When asked about beaches, provide: Crane Beach, Bathsheba Beach, Bottom Bay, Miami Beach (Enterprise), Accra Beach (Rockley), Brownes Beach, Mullins Beach, Paynes Bay, Carlisle Bay, Silver Sands.\n"
+                    f"- Popular attractions: Harrison's Cave, Animal Flower Cave, Hunte's Gardens, Andromeda Botanic Gardens, St. Nicholas Abbey, George Washington House, Barbados Wildlife Reserve, Welchman Hall Gully, Farley Hill National Park, the Barbados Museum.\n"
+                    f"- Historic sites: Garrison Historic Area (UNESCO World Heritage), Parliament Buildings, Bridgetown's Cheapside Market, Holetown (first settlement), Oistins Fish Fry.\n\n"
+                    f"HOTELS & ACCOMMODATION (always provide real links):\n"
+                    f"- Luxury: Sandy Lane Hotel (https://www.sandylane.com), The Crane Resort (https://www.thecrane.com), Cobblers Cove (https://www.cobblerscove.com), Colony Club (https://www.eleganthotels.com/colony-club)\n"
+                    f"- Mid-range: Courtyard by Marriott (https://www.marriott.com), Hilton Barbados (https://www.hilton.com), Radisson Aquatica (https://www.radissonhotels.com), Accra Beach Hotel\n"
+                    f"- Budget: Island Inn Hotel, Yellow Bird Hotel, Worthing Court Apartment Hotel\n"
+                    f"- Booking sites: https://www.visitbarbados.org, https://www.booking.com, https://www.airbnb.com\n\n"
+                    f"VILLAS & RENTALS:\n"
+                    f"- Villa rental sites: https://www.barbadosdreamvillas.com, https://www.vrbo.com, https://www.airbnb.com, https://www.terracaribbean.com/barbados/rentals, https://www.realtorslimited.com\n"
+                    f"- Areas for villas: Royal Westmoreland, Sugar Hill, Sandy Lane Estate, Apes Hill, Port St. Charles, St. James coast, Christ Church south coast.\n"
+                    f"- Always mention price ranges if possible and recommend checking the sites for latest availability.\n\n"
+                    f"LAND FOR SALE:\n"
+                    f"- Real estate sites: https://www.terracaribbean.com, https://www.realtorslimited.com, https://www.caribbeanluxuryproperty.com, https://www.propertiesinbarbados.com\n"
+                    f"- Popular areas: West Coast (St. James, St. Peter), South Coast (Christ Church), Apes Hill, Royal Westmoreland.\n\n"
+                    f"PLACES TO RENT:\n"
+                    f"- Rental listings: https://www.terracaribbean.com/barbados/rentals, https://www.realtorslimited.com, https://www.caribbeanluxuryproperty.com, Facebook Marketplace Barbados, https://www.airbnb.com (long-term)\n"
+                    f"- Recommend contacting local real estate agents for best deals.\n\n"
+                    f"RENTAL CARS:\n"
+                    f"- Companies: Stoutes Car Rental (https://www.stoutescar.com), Direct Car Rentals (https://www.directcarbarbados.com), Drive-A-Matic (https://www.driveamatic.com), Courtesy Rent-A-Car (https://www.courtesyrentacar.com)\n"
+                    f"- Note: Driving is on the LEFT side of the road. You need a Barbados driving permit (available at rental agencies or police stations for about $10 BBD).\n\n"
+                    f"JOBS IN BARBADOS:\n"
+                    f"- Job sites: https://www.caribbeanjobs.com, https://www.glassdoor.com, https://www.linkedin.com/jobs (search Barbados), https://www.indeed.com\n"
+                    f"- Government jobs: https://www.barbadosparliament.com, check the Barbados Government Information Service\n"
+                    f"- Top industries: Tourism & hospitality, financial services, technology, construction, education, healthcare.\n"
+                    f"- Mention the Barbados Welcome Stamp for remote workers (https://www.barbadoswelcomestamp.bb).\n\n"
+                    f"SCHOOLS IN BARBADOS:\n"
+                    f"- Top secondary schools: Harrison College, Queen's College, Combermere School, The Lodge School, Christ Church Foundation, Coleridge & Parry School, Alexandra School.\n"
+                    f"- Primary schools: Government primary schools island-wide, private options like Codrington School.\n"
+                    f"- University: University of the West Indies Cave Hill Campus (https://www.cavehill.uwi.edu), Barbados Community College (https://www.bcc.edu.bb)\n"
+                    f"- International schools: The Codrington School (https://www.codrington.edu.bb)\n\n"
+                    f"BAJAN COOKING:\n"
+                    f"- When asked about Bajan cooking, provide full recipes with ingredients and steps.\n"
+                    f"- Signature dishes: Cou-cou & Flying Fish (national dish), Macaroni Pie, Rice & Peas, Fish Cakes, Pudding & Souse, Conkies, Bajan Pepper Sauce, Bajan Seasoning, Breadfruit cou-cou, Jug Jug, Black Cake (Christmas).\n"
+                    f"- Drinks: Rum Punch (Bajan style), Mauby, Sorrel, Coconut Water, Banks Beer.\n"
+                    f"- Key seasonings: Bajan seasoning (thyme, marjoram, green onion, scotch bonnet, garlic, lime juice).\n"
+                    f"- Always explain the cultural significance of the dish.\n\n"
+                    f"TOUR GUIDES & ADVENTURES:\n"
+                    f"- Island Safari (https://www.islandsafari.bb) - Jeep tours\n"
+                    f"- Atlantis Submarines (https://www.atlantissubmarines.com) - underwater tours\n"
+                    f"- Cool Runnings Catamaran Cruises - snorkeling with turtles\n"
+                    f"- Harbour Master Cruises - party cruises\n"
+                    f"- Adventures: Zip-lining, surfing at Bathsheba, snorkeling at Carlisle Bay (shipwrecks & turtles), hiking at Welchman Hall Gully, horseback riding, jet skiing, paddleboarding.\n"
+                    f"- Harrison's Cave tours: https://www.harrisonscave.com\n\n"
+                    f"CHURCHES:\n"
+                    f"- St. John's Parish Church (stunning cliffside views), St. Michael's Cathedral, St. James Parish Church (oldest church, built 1628), St. George Parish Church, Bridgetown Synagogue (one of oldest in the Western Hemisphere).\n"
+                    f"- Note Barbados has a strong Christian heritage with Anglican, Catholic, Methodist, Pentecostal, and other denominations.\n\n"
+                    f"BARS & NIGHTLIFE:\n"
+                    f"- Oistins Fish Fry (Friday night is legendary), St. Lawrence Gap (bar strip on south coast), Holetown nightlife.\n"
+                    f"- Popular bars: The Boatyard, Harbour Lights, Naru Restaurant & Lounge, Tapas, Red Door Lounge, Nikki Beach.\n"
+                    f"- Rum shops are a Barbados cultural institution — small local bars found everywhere.\n"
+                    f"- Mount Gay Rum Distillery tours (https://www.mountgayrum.com) — oldest rum company in the world (since 1703).\n\n"
+                    f"GAMES & SPORTS:\n"
+                    f"- Cricket is the national sport. Kensington Oval is the main cricket ground.\n"
+                    f"- Other popular sports: football (soccer), road tennis (invented in Barbados!), horse racing at the Garrison Savannah, surfing, basketball.\n"
+                    f"- Road tennis is unique to Barbados — played on the road with wooden paddles.\n\n"
+                    f"IMPORTANT LINKS RULE:\n"
+                    f"- When providing recommendations, ALWAYS include real, working website links where available.\n"
+                    f"- Provide reviews and ratings when you can (e.g., 'highly rated', 'popular with visitors').\n"
+                    f"- Recommend checking https://www.visitbarbados.org for the latest official tourism info.\n"
+                    f"- If you don't have a specific link, say so and suggest where to search."
                 )
             }
             api_messages = [system_msg] + st.session_state.messages
