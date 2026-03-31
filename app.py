@@ -82,11 +82,35 @@ if "current_chat_name" not in st.session_state:
     st.session_state.current_chat_name = None
 if "images" not in st.session_state:
     st.session_state.images = []
+if "selected_model" not in st.session_state:
+    st.session_state.selected_model = "gpt-4o"
+
+# Available models
+MODELS = {
+    "GPT-4o (Best accuracy)": "gpt-4o",
+    "GPT-4o Mini (Fast & cheap)": "gpt-4o-mini",
+    "GPT-4 Turbo": "gpt-4-turbo",
+    "GPT-4": "gpt-4",
+    "GPT-3.5 Turbo (Budget)": "gpt-3.5-turbo",
+    "o1 (Advanced reasoning)": "o1",
+    "o1-mini (Fast reasoning)": "o1-mini",
+    "o3-mini (Latest reasoning)": "o3-mini",
+}
 
 # Sidebar
 with st.sidebar:
     # --- New Chat ---
     st.title("🏗️ BIM-CHATBOT")
+
+    # --- Model Selector ---
+    selected_label = st.selectbox(
+        "🧠 AI Model",
+        options=list(MODELS.keys()),
+        index=list(MODELS.values()).index(st.session_state.selected_model),
+        help="Choose the AI model. Better models cost more but are more accurate."
+    )
+    st.session_state.selected_model = MODELS[selected_label]
+
     if st.button("➕ New Chat", use_container_width=True):
         # Auto-save current chat before starting new one
         if st.session_state.messages:
@@ -323,21 +347,34 @@ if prompt := st.chat_input("Ask me anything..."):
                     api_messages[last_user_idx] = {"role": "user", "content": multimodal_content}
 
             # Stream response for ChatGPT-like effect
-            stream = client.chat.completions.create(
-                model="gpt-4o",
-                messages=api_messages,
-                temperature=0.1,
-                max_tokens=4000,
-                stream=True
-            )
-            
-            full_response = ""
-            for chunk in stream:
-                if chunk.choices[0].delta.content is not None:
-                    full_response += chunk.choices[0].delta.content
-                    message_placeholder.markdown(full_response + "▌")
-            
-            message_placeholder.markdown(full_response)
+            use_model = st.session_state.selected_model
+            # o1/o3 models don't support streaming or temperature
+            is_reasoning = use_model.startswith(("o1", "o3"))
+
+            if is_reasoning:
+                response = client.chat.completions.create(
+                    model=use_model,
+                    messages=api_messages,
+                    max_completion_tokens=4000,
+                )
+                full_response = response.choices[0].message.content
+                message_placeholder.markdown(full_response)
+            else:
+                stream = client.chat.completions.create(
+                    model=use_model,
+                    messages=api_messages,
+                    temperature=0.1,
+                    max_tokens=4000,
+                    stream=True
+                )
+                
+                full_response = ""
+                for chunk in stream:
+                    if chunk.choices[0].delta.content is not None:
+                        full_response += chunk.choices[0].delta.content
+                        message_placeholder.markdown(full_response + "▌")
+                
+                message_placeholder.markdown(full_response)
             
             # Add assistant response to history
             st.session_state.messages.append({"role": "assistant", "content": full_response})
