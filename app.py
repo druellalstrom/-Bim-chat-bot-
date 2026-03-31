@@ -42,107 +42,288 @@ st.set_page_config(
     layout="wide"
 )
 
-# Barbados-themed custom CSS (Blue, Yellow, Black + Trident background)
-st.markdown("""
+# Load trident image as base64 for background (remove white bg, keep as clean silhouette)
+def get_trident_b64():
+    import base64 as b64lib
+    from PIL import Image as PILImage
+    import numpy as np
+    trident_path = Path("photo/trident.jpg")
+    if trident_path.exists():
+        img = PILImage.open(trident_path).convert("RGBA")
+        data = np.array(img)
+        r, g, b = data[:,:,0], data[:,:,1], data[:,:,2]
+        # Remove white/light background → fully transparent
+        light_mask = (r > 160) & (g > 160) & (b > 160)
+        data[light_mask] = [0, 0, 0, 0]
+        # Make dark pixels (the trident) a soft gold for brand accent
+        dark_mask = ~light_mask
+        data[dark_mask, 0] = 240  # R
+        data[dark_mask, 1] = 192  # G
+        data[dark_mask, 2] = 0    # B
+        data[dark_mask, 3] = 255
+        img_out = PILImage.fromarray(data)
+        buf = io.BytesIO()
+        img_out.save(buf, format="PNG")
+        return b64lib.b64encode(buf.getvalue()).decode("utf-8")
+    return ""
+
+trident_b64 = get_trident_b64()
+
+# Professional clean design with Barbados colors
+trident_bg = f'url("data:image/png;base64,{trident_b64}")' if trident_b64 else 'none'
+st.markdown(f"""
 <style>
-/* Trident SVG as background watermark */
-[data-testid="stMain"] {
-    background-color: #00267F;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 400' opacity='0.06'%3E%3Cpath d='M100 10 L100 390 M100 10 L70 80 Q100 60 130 80 Z M60 120 Q40 100 30 130 L80 110 Z M140 120 Q160 100 170 130 L120 110 Z M85 380 Q100 360 115 380 Z' fill='%23FFC726' stroke='%23FFC726' stroke-width='4'/%3E%3C/svg%3E");
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ===== BASE ===== */
+[data-testid="stMain"] {{
+    background: linear-gradient(135deg, #0A1F44, #133E7C) !important;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    position: relative;
+}}
+
+/* ===== TRIDENT BACKGROUND ===== */
+[data-testid="stMain"]::before {{
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: {trident_bg};
     background-repeat: no-repeat;
-    background-position: center center;
-    background-size: 300px auto;
-}
+    background-position: center;
+    background-size: 350px;
+    opacity: 0.15;
+    pointer-events: none;
+    z-index: 0;
+}}
 
-/* Main text color */
-[data-testid="stMain"] * {
-    color: #FFFFFF;
-}
+/* ===== CONTENT LAYER ===== */
+[data-testid="stMain"] > div {{
+    position: relative;
+    z-index: 1;
+}}
 
-/* Sidebar styling */
-[data-testid="stSidebar"] {
-    background-color: #000000 !important;
-}
-[data-testid="stSidebar"] * {
-    color: #FFC726 !important;
-}
-[data-testid="stSidebar"] .stButton > button {
-    background-color: #00267F !important;
-    color: #FFC726 !important;
-    border: 1px solid #FFC726 !important;
+/* ===== TEXT ===== */
+[data-testid="stMain"] * {{
+    color: #E6EDF3;
+}}
+
+/* ===== SIDEBAR ===== */
+[data-testid="stSidebar"] {{
+    background: #010409 !important;
+    border-right: 1px solid #21262D !important;
+}}
+[data-testid="stSidebar"] * {{
+    color: #C9D1D9 !important;
+}}
+[data-testid="stSidebar"] .stButton > button {{
+    background: #161B22 !important;
+    color: #F0C000 !important;
+    border: 1px solid #30363D !important;
     border-radius: 8px;
-}
-[data-testid="stSidebar"] .stButton > button:hover {
-    background-color: #FFC726 !important;
-    color: #000000 !important;
-}
+    transition: all 0.2s ease;
+    font-weight: 500;
+    font-size: 14px;
+    padding: 8px 16px;
+}}
+[data-testid="stSidebar"] .stButton > button:hover {{
+    background: #1C2333 !important;
+    border-color: #F0C000 !important;
+    color: #F0C000 !important;
+}}
 
-/* Chat input box */
-[data-testid="stChatInput"] textarea {
-    background-color: #001545 !important;
-    color: #FFFFFF !important;
-    border: 2px solid #FFC726 !important;
-    border-radius: 10px;
-}
-
-/* User chat bubble */
-[data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-user"]) {
-    background-color: #001A5E !important;
-    border: 1px solid #FFC726 !important;
+/* ===== CHAT INPUT ===== */
+[data-testid="stChatInput"] {{
+    border-top: 1px solid #21262D !important;
+}}
+[data-testid="stChatInput"] textarea {{
+    background: #161B22 !important;
+    color: #E6EDF3 !important;
+    border: 1px solid #30363D !important;
     border-radius: 12px;
-}
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    padding: 12px 16px;
+}}
+[data-testid="stChatInput"] textarea:focus {{
+    border-color: #F0C000 !important;
+    box-shadow: 0 0 0 1px rgba(240, 192, 0, 0.3) !important;
+}}
+[data-testid="stChatInput"] textarea::placeholder {{
+    color: #484F58 !important;
+}}
 
-/* Assistant chat bubble */
-[data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-assistant"]) {
-    background-color: #0D0D0D !important;
-    border: 1px solid #FFC726 !important;
-    border-radius: 12px;
-}
+/* ===== CHAT MESSAGES ===== */
+[data-testid="stChatMessage"] {{
+    border-radius: 0 !important;
+    padding: 20px 24px !important;
+    margin-bottom: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    max-width: 100%;
+}}
+[data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-user"]) {{
+    background: #0D1117 !important;
+    border-bottom: 1px solid #161B22 !important;
+}}
+[data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-assistant"]) {{
+    background: #161B22 !important;
+    border-bottom: 1px solid #21262D !important;
+}}
 
-/* Title styling */
-h1 {
-    color: #FFC726 !important;
-    text-shadow: 2px 2px 4px #000000;
-}
+/* Chat message text */
+[data-testid="stChatMessage"] p,
+[data-testid="stChatMessage"] li,
+[data-testid="stChatMessage"] span {{
+    font-size: 15px;
+    line-height: 1.7;
+    color: #E6EDF3 !important;
+}}
+[data-testid="stChatMessage"] code {{
+    background: #0D1117 !important;
+    color: #79C0FF !important;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 13px;
+}}
+[data-testid="stChatMessage"] pre {{
+    background: #0D1117 !important;
+    border: 1px solid #21262D !important;
+    border-radius: 8px;
+    padding: 16px !important;
+}}
 
-/* Subheaders */
-h2, h3 {
-    color: #FFC726 !important;
-}
+/* ===== AVATAR STYLING ===== */
+[data-testid="chatAvatarIcon-assistant"] {{
+    background: #F0C000 !important;
+    color: #0D1117 !important;
+}}
+[data-testid="chatAvatarIcon-user"] {{
+    background: #1F6FEB !important;
+}}
 
-/* Metrics */
-[data-testid="stMetricValue"] {
-    color: #FFC726 !important;
-}
+/* ===== TITLE ===== */
+h1 {{
+    color: #F0C000 !important;
+    font-weight: 700;
+    font-size: 28px !important;
+    letter-spacing: 0.5px;
+    text-shadow: none;
+}}
+h2 {{
+    color: #F0C000 !important;
+    font-weight: 600;
+    font-size: 18px !important;
+}}
+h3 {{
+    color: #C9D1D9 !important;
+    font-weight: 600;
+}}
 
-/* Selectbox / dropdown */
-[data-testid="stSelectbox"] div[data-baseweb="select"] {
-    background-color: #001545 !important;
-    border: 1px solid #FFC726 !important;
-}
+/* ===== CAPTION ===== */
+[data-testid="stCaptionContainer"],
+[data-testid="stCaptionContainer"] * {{
+    color: #484F58 !important;
+    font-size: 13px !important;
+}}
 
-/* Text input */
-[data-testid="stTextInput"] input {
-    background-color: #001545 !important;
-    color: #FFC726 !important;
-    border: 1px solid #FFC726 !important;
-}
+/* ===== SELECTBOX ===== */
+[data-testid="stSelectbox"] div[data-baseweb="select"] {{
+    background: #161B22 !important;
+    border: 1px solid #30363D !important;
+    border-radius: 8px;
+}}
+[data-testid="stSelectbox"] div[data-baseweb="select"]:hover {{
+    border-color: #484F58 !important;
+}}
 
-/* File uploader */
-[data-testid="stFileUploader"] {
-    border: 2px dashed #FFC726 !important;
-    border-radius: 10px;
-}
+/* ===== TEXT INPUT ===== */
+[data-testid="stTextInput"] input {{
+    background: #161B22 !important;
+    color: #E6EDF3 !important;
+    border: 1px solid #30363D !important;
+    border-radius: 8px;
+    font-size: 14px;
+}}
+[data-testid="stTextInput"] input:focus {{
+    border-color: #F0C000 !important;
+    box-shadow: 0 0 0 1px rgba(240, 192, 0, 0.3) !important;
+}}
 
-/* Dividers */
-hr {
-    border-color: #FFC726 !important;
-}
+/* ===== FILE UPLOADER ===== */
+[data-testid="stFileUploader"] {{
+    border: 1px dashed #30363D !important;
+    border-radius: 8px;
+    padding: 12px;
+    transition: border-color 0.2s ease;
+    background: #161B22 !important;
+}}
+[data-testid="stFileUploader"]:hover {{
+    border-color: #F0C000 !important;
+}}
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: #000000; }
-::-webkit-scrollbar-thumb { background: #FFC726; border-radius: 4px; }
+/* ===== DIVIDERS ===== */
+hr {{
+    border-color: #21262D !important;
+}}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar {{ width: 8px; }}
+::-webkit-scrollbar-track {{ background: #0D1117; }}
+::-webkit-scrollbar-thumb {{ background: #30363D; border-radius: 4px; }}
+::-webkit-scrollbar-thumb:hover {{ background: #484F58; }}
+
+/* ===== LINKS ===== */
+a {{ color: #58A6FF !important; text-decoration: none !important; }}
+a:hover {{ color: #79C0FF !important; text-decoration: underline !important; }}
+
+/* ===== ALERTS ===== */
+[data-testid="stAlert"] {{
+    border-radius: 8px;
+    background: #161B22 !important;
+    border: 1px solid #30363D !important;
+}}
+
+/* ===== STREAMLIT HEADER HIDE ===== */
+header[data-testid="stHeader"] {{
+    background: #0D1117 !important;
+    border-bottom: 1px solid #21262D;
+}}
+
+/* ===== BOTTOM BAR ===== */
+[data-testid="stBottomBlockContainer"] {{
+    background: #0D1117 !important;
+}}
+
+/* ===== DROPDOWN MENU ===== */
+[data-baseweb="menu"],
+[data-baseweb="popover"] {{
+    background: #161B22 !important;
+    border: 1px solid #30363D !important;
+}}
+[data-baseweb="menu"] li {{
+    color: #E6EDF3 !important;
+}}
+[data-baseweb="menu"] li:hover {{
+    background: #21262D !important;
+}}
+
+/* ===== SIDEBAR LABELS ===== */
+[data-testid="stSidebar"] label {{
+    color: #8B949E !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}}
+
+/* ===== WRITE TEXT ===== */
+[data-testid="stSidebar"] [data-testid="stText"] {{
+    color: #8B949E !important;
+    font-size: 13px !important;
+}}
 </style>
 """, unsafe_allow_html=True)
 
