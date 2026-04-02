@@ -69,20 +69,27 @@ def get_trident_b64():
 
 trident_b64 = get_trident_b64()
 
-# Professional clean design with Barbados colors
+# BIM-CHATBOT Premium Design
 trident_bg = f'url("data:image/png;base64,{trident_b64}")' if trident_b64 else 'none'
 st.markdown(f"""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-/* ===== BASE ===== */
-[data-testid="stMain"] {{
-    background: linear-gradient(135deg, #0A1F44, #133E7C) !important;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    position: relative;
+/* ===== GLOBAL RESET ===== */
+*, *::before, *::after {{
+    box-sizing: border-box;
+    font-family: 'Inter', Arial, sans-serif;
 }}
 
-/* ===== TRIDENT BACKGROUND ===== */
+/* ===== MAIN CHAT AREA ===== */
+[data-testid="stMain"] {{
+    background: #09172d !important;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}}
+
+/* ===== TRIDENT BACKGROUND LAYER ===== */
 [data-testid="stMain"]::before {{
     content: "";
     position: fixed;
@@ -92,237 +99,324 @@ st.markdown(f"""
     height: 100%;
     background-image: {trident_bg};
     background-repeat: no-repeat;
-    background-position: center;
-    background-size: 350px;
-    opacity: 0.15;
+    background-position: center center;
+    background-size: 650px;
+    opacity: 0.16;
+    filter: brightness(1.4) contrast(1.2) drop-shadow(0 0 25px rgba(255, 215, 0, 0.12));
     pointer-events: none;
     z-index: 0;
 }}
 
-/* ===== CONTENT LAYER ===== */
+/* ===== DARK OVERLAY FOR READABILITY ===== */
+[data-testid="stMain"]::after {{
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(6, 18, 36, 0.72), rgba(6, 18, 36, 0.82));
+    pointer-events: none;
+    z-index: 0;
+}}
+
+/* ===== CONTENT ABOVE LAYERS ===== */
 [data-testid="stMain"] > div {{
     position: relative;
-    z-index: 1;
+    z-index: 2;
 }}
 
 /* ===== TEXT ===== */
 [data-testid="stMain"] * {{
-    color: #E6EDF3;
+    color: #f7f7f7;
 }}
 
 /* ===== SIDEBAR ===== */
 [data-testid="stSidebar"] {{
-    background: #010409 !important;
-    border-right: 1px solid #21262D !important;
+    background: linear-gradient(180deg, #020814 0%, #040d1d 100%) !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
 }}
 [data-testid="stSidebar"] * {{
-    color: #C9D1D9 !important;
-}}
-[data-testid="stSidebar"] .stButton > button {{
-    background: #161B22 !important;
-    color: #F0C000 !important;
-    border: 1px solid #30363D !important;
-    border-radius: 8px;
-    transition: all 0.2s ease;
-    font-weight: 500;
-    font-size: 14px;
-    padding: 8px 16px;
-}}
-[data-testid="stSidebar"] .stButton > button:hover {{
-    background: #1C2333 !important;
-    border-color: #F0C000 !important;
-    color: #F0C000 !important;
+    color: #d8d8d8 !important;
 }}
 
-/* ===== CHAT INPUT ===== */
+/* Sidebar title */
+[data-testid="stSidebar"] h1 {{
+    color: #f3e6c5 !important;
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    letter-spacing: 1px;
+}}
+
+/* Sidebar buttons */
+[data-testid="stSidebar"] .stButton > button {{
+    background: rgba(255, 255, 255, 0.06) !important;
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 14px;
+    padding: 14px;
+    font-size: 15px;
+    transition: 0.25s ease;
+}}
+[data-testid="stSidebar"] .stButton > button:hover {{
+    background: rgba(255, 215, 0, 0.12) !important;
+    border-color: rgba(255, 215, 0, 0.25) !important;
+    color: #FFD700 !important;
+}}
+
+/* Sidebar labels */
+[data-testid="stSidebar"] label {{
+    color: #d8d8d8 !important;
+    font-size: 14px !important;
+}}
+
+/* Sidebar subheaders */
+[data-testid="stSidebar"] h2,
+[data-testid="stSidebar"] h3 {{
+    color: #f0f0f0 !important;
+}}
+
+/* Sidebar captions / muted text */
+[data-testid="stSidebar"] [data-testid="stText"],
+[data-testid="stSidebar"] [data-testid="stCaptionContainer"] {{
+    color: rgba(255, 255, 255, 0.55) !important;
+    font-size: 14px !important;
+}}
+
+/* ===== SELECTBOX ===== */
+[data-testid="stSelectbox"] div[data-baseweb="select"] {{
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 12px;
+}}
+
+/* ===== TEXT INPUT ===== */
+[data-testid="stTextInput"] input {{
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 14px;
+}}
+[data-testid="stTextInput"] input:focus {{
+    border-color: rgba(255, 215, 0, 0.4) !important;
+    box-shadow: 0 0 0 1px rgba(255, 215, 0, 0.15) !important;
+}}
+
+/* ===== CHAT INPUT BAR ===== */
 [data-testid="stChatInput"] {{
-    border-top: 1px solid #21262D !important;
+    background: transparent !important;
+    border-top: none !important;
 }}
 [data-testid="stChatInput"] textarea {{
-    background: #161B22 !important;
-    color: #E6EDF3 !important;
-    border: 1px solid #30363D !important;
-    border-radius: 12px;
-    font-family: 'Inter', sans-serif;
-    font-size: 15px;
-    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.07) !important;
+    backdrop-filter: blur(10px);
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 18px;
+    font-size: 18px;
+    padding: 14px 18px;
+    font-family: 'Inter', Arial, sans-serif;
 }}
 [data-testid="stChatInput"] textarea:focus {{
-    border-color: #F0C000 !important;
-    box-shadow: 0 0 0 1px rgba(240, 192, 0, 0.3) !important;
+    border-color: rgba(255, 215, 0, 0.3) !important;
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.08) !important;
 }}
 [data-testid="stChatInput"] textarea::placeholder {{
-    color: #484F58 !important;
+    color: rgba(255, 255, 255, 0.45) !important;
+}}
+[data-testid="stChatInput"] button {{
+    border-radius: 14px !important;
+    background: #d9dbe1 !important;
+    color: #18253a !important;
+    transition: 0.2s ease;
+}}
+[data-testid="stChatInput"] button:hover {{
+    transform: scale(1.04);
 }}
 
 /* ===== CHAT MESSAGES ===== */
 [data-testid="stChatMessage"] {{
-    border-radius: 0 !important;
-    padding: 20px 24px !important;
-    margin-bottom: 0 !important;
+    max-width: 100%;
+    margin-bottom: 16px !important;
     border: none !important;
     box-shadow: none !important;
-    max-width: 100%;
-}}
-[data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-user"]) {{
-    background: #0D1117 !important;
-    border-bottom: 1px solid #161B22 !important;
-}}
-[data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-assistant"]) {{
-    background: #161B22 !important;
-    border-bottom: 1px solid #21262D !important;
 }}
 
-/* Chat message text */
-[data-testid="stChatMessage"] p,
-[data-testid="stChatMessage"] li,
-[data-testid="stChatMessage"] span {{
-    font-size: 15px;
-    line-height: 1.7;
-    color: #E6EDF3 !important;
+/* User messages — gold gradient bubble */
+[data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-user"]) {{
+    background: transparent !important;
+    padding: 8px 24px !important;
 }}
+[data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-user"]) [data-testid="stMarkdownContainer"] {{
+    background: linear-gradient(135deg, #d89a00, #ffd700) !important;
+    color: #111 !important;
+    border-radius: 18px;
+    padding: 16px 18px;
+    max-width: 70%;
+    margin-left: auto;
+    font-weight: 600;
+}}
+[data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-user"]) p,
+[data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-user"]) span {{
+    color: #111 !important;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.5;
+}}
+
+/* Bot messages — glass bubble */
+[data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-assistant"]) {{
+    background: transparent !important;
+    padding: 8px 24px !important;
+}}
+[data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-assistant"]) [data-testid="stMarkdownContainer"] {{
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    padding: 16px 18px;
+    backdrop-filter: blur(14px);
+}}
+[data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-assistant"]) p,
+[data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-assistant"]) li,
+[data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-assistant"]) span {{
+    color: white !important;
+    font-size: 16px;
+    line-height: 1.5;
+}}
+
+/* Code blocks */
 [data-testid="stChatMessage"] code {{
-    background: #0D1117 !important;
+    background: rgba(0, 0, 0, 0.4) !important;
     color: #79C0FF !important;
     padding: 2px 6px;
     border-radius: 4px;
     font-size: 13px;
 }}
 [data-testid="stChatMessage"] pre {{
-    background: #0D1117 !important;
-    border: 1px solid #21262D !important;
-    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.4) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 12px;
     padding: 16px !important;
 }}
 
-/* ===== AVATAR STYLING ===== */
+/* ===== AVATARS ===== */
 [data-testid="chatAvatarIcon-assistant"] {{
-    background: #F0C000 !important;
-    color: #0D1117 !important;
+    background: linear-gradient(135deg, #d89a00, #ffd700) !important;
+    color: #111 !important;
 }}
 [data-testid="chatAvatarIcon-user"] {{
-    background: #1F6FEB !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+    color: white !important;
 }}
 
-/* ===== TITLE ===== */
+/* ===== TITLES ===== */
 h1 {{
-    color: #F0C000 !important;
+    color: #f3e6c5 !important;
     font-weight: 700;
-    font-size: 28px !important;
-    letter-spacing: 0.5px;
-    text-shadow: none;
+    font-size: 20px !important;
+    letter-spacing: 1px;
 }}
 h2 {{
-    color: #F0C000 !important;
+    color: #f0f0f0 !important;
     font-weight: 600;
     font-size: 18px !important;
 }}
 h3 {{
-    color: #C9D1D9 !important;
+    color: #f0f0f0 !important;
     font-weight: 600;
 }}
 
 /* ===== CAPTION ===== */
 [data-testid="stCaptionContainer"],
 [data-testid="stCaptionContainer"] * {{
-    color: #484F58 !important;
-    font-size: 13px !important;
+    color: rgba(255, 255, 255, 0.55) !important;
+    font-size: 14px !important;
 }}
 
-/* ===== SELECTBOX ===== */
-[data-testid="stSelectbox"] div[data-baseweb="select"] {{
-    background: #161B22 !important;
-    border: 1px solid #30363D !important;
-    border-radius: 8px;
+/* ===== EXPANDER (Events panel) ===== */
+[data-testid="stExpander"] {{
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 14px;
+    backdrop-filter: blur(10px);
 }}
-[data-testid="stSelectbox"] div[data-baseweb="select"]:hover {{
-    border-color: #484F58 !important;
-}}
-
-/* ===== TEXT INPUT ===== */
-[data-testid="stTextInput"] input {{
-    background: #161B22 !important;
-    color: #E6EDF3 !important;
-    border: 1px solid #30363D !important;
-    border-radius: 8px;
-    font-size: 14px;
-}}
-[data-testid="stTextInput"] input:focus {{
-    border-color: #F0C000 !important;
-    box-shadow: 0 0 0 1px rgba(240, 192, 0, 0.3) !important;
+[data-testid="stExpander"] summary {{
+    color: #f7f7f7 !important;
+    font-size: 20px;
 }}
 
 /* ===== FILE UPLOADER ===== */
 [data-testid="stFileUploader"] {{
-    border: 1px dashed #30363D !important;
-    border-radius: 8px;
+    border: 1px dashed rgba(255, 255, 255, 0.12) !important;
+    border-radius: 14px;
     padding: 12px;
-    transition: border-color 0.2s ease;
-    background: #161B22 !important;
+    background: rgba(255, 255, 255, 0.04) !important;
+    transition: 0.25s ease;
 }}
 [data-testid="stFileUploader"]:hover {{
-    border-color: #F0C000 !important;
+    border-color: rgba(255, 215, 0, 0.25) !important;
+    background: rgba(255, 215, 0, 0.04) !important;
 }}
 
 /* ===== DIVIDERS ===== */
 hr {{
-    border-color: #21262D !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
 }}
 
 /* ===== SCROLLBAR ===== */
-::-webkit-scrollbar {{ width: 8px; }}
-::-webkit-scrollbar-track {{ background: #0D1117; }}
-::-webkit-scrollbar-thumb {{ background: #30363D; border-radius: 4px; }}
-::-webkit-scrollbar-thumb:hover {{ background: #484F58; }}
+::-webkit-scrollbar {{ width: 6px; }}
+::-webkit-scrollbar-track {{ background: transparent; }}
+::-webkit-scrollbar-thumb {{ background: rgba(255, 255, 255, 0.15); border-radius: 3px; }}
+::-webkit-scrollbar-thumb:hover {{ background: rgba(255, 255, 255, 0.3); }}
 
 /* ===== LINKS ===== */
-a {{ color: #58A6FF !important; text-decoration: none !important; }}
-a:hover {{ color: #79C0FF !important; text-decoration: underline !important; }}
+a {{ color: #FFD700 !important; text-decoration: none !important; }}
+a:hover {{ color: #ffe082 !important; text-decoration: underline !important; }}
 
 /* ===== ALERTS ===== */
 [data-testid="stAlert"] {{
-    border-radius: 8px;
-    background: #161B22 !important;
-    border: 1px solid #30363D !important;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px);
 }}
 
-/* ===== STREAMLIT HEADER HIDE ===== */
+/* ===== HEADER ===== */
 header[data-testid="stHeader"] {{
-    background: #0D1117 !important;
-    border-bottom: 1px solid #21262D;
+    background: #061224 !important;
 }}
 
 /* ===== BOTTOM BAR ===== */
 [data-testid="stBottomBlockContainer"] {{
-    background: #0D1117 !important;
+    background: transparent !important;
 }}
 
 /* ===== DROPDOWN MENU ===== */
 [data-baseweb="menu"],
 [data-baseweb="popover"] {{
-    background: #161B22 !important;
-    border: 1px solid #30363D !important;
+    background: #0a1a30 !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 12px;
 }}
 [data-baseweb="menu"] li {{
-    color: #E6EDF3 !important;
+    color: #f7f7f7 !important;
 }}
 [data-baseweb="menu"] li:hover {{
-    background: #21262D !important;
+    background: rgba(255, 215, 0, 0.1) !important;
 }}
 
-/* ===== SIDEBAR LABELS ===== */
-[data-testid="stSidebar"] label {{
-    color: #8B949E !important;
-    font-size: 13px !important;
-    font-weight: 500 !important;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}}
-
-/* ===== WRITE TEXT ===== */
-[data-testid="stSidebar"] [data-testid="stText"] {{
-    color: #8B949E !important;
-    font-size: 13px !important;
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {{
+    [data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-user"]) [data-testid="stMarkdownContainer"] {{
+        max-width: 85%;
+    }}
+    [data-testid="stMain"]::before {{
+        background-size: 420px;
+        opacity: 0.12;
+    }}
 }}
 </style>
 """, unsafe_allow_html=True)
