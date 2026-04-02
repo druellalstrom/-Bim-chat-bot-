@@ -327,6 +327,17 @@ header[data-testid="stHeader"] {{
 </style>
 """, unsafe_allow_html=True)
 
+# Load upcoming events
+EVENTS_FILE = Path("events.json")
+
+def load_events():
+    if EVENTS_FILE.exists():
+        with open(EVENTS_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return []
+
+ALL_EVENTS = load_events()
+
 # Chat history file management
 HISTORY_DIR = Path("chat_histories")
 HISTORY_DIR.mkdir(exist_ok=True)
@@ -521,6 +532,31 @@ with st.sidebar:
 st.title("🏗️ BIM-CHATBOT")
 st.caption("Your intelligent BIM assistant powered by document retrieval")
 
+# Upcoming events panel
+if ALL_EVENTS:
+    with st.expander("🎉 Upcoming Barbados Events", expanded=False):
+        # Sort: weekly events last, then by date string
+        upcoming = [e for e in ALL_EVENTS if e.get("category") != "Weekly"]
+        weekly = [e for e in ALL_EVENTS if e.get("category") == "Weekly"]
+        cols = st.columns(min(len(upcoming[:4]), 4)) if upcoming else []
+        for i, event in enumerate(upcoming[:4]):
+            with cols[i % 4]:
+                st.markdown(f"**{event['name']}**")
+                st.caption(f"📅 {event['date']}")
+                st.caption(f"📍 {event['location']}")
+                st.caption(f"🎟️ {event['cost']}")
+                if event.get('link'):
+                    st.markdown(f"[More info]({event['link']})")
+        if len(upcoming) > 4:
+            st.divider()
+            for event in upcoming[4:]:
+                st.markdown(f"**{event['name']}** — {event['date']} | 📍 {event['location']} | 🎟️ {event['cost']}")
+        if weekly:
+            st.divider()
+            st.markdown("**🔁 Weekly Events**")
+            for event in weekly:
+                st.markdown(f"**{event['name']}** — {event['date']} | 📍 {event['location']} | 🎟️ {event['cost']}")
+
 # Display chat messages
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
@@ -671,8 +707,11 @@ if prompt := st.chat_input("Ask me anything..."):
                     f"- Cricket is the national sport. Kensington Oval is the main cricket ground.\n"
                     f"- Other popular sports: football (soccer), road tennis (invented in Barbados!), horse racing at the Garrison Savannah, surfing, basketball.\n"
                     f"- Road tennis is unique to Barbados — played on the road with wooden paddles.\n\n"
+                    f"UPCOMING BARBADOS EVENTS (use this data when users ask about events, things to do, festivals, etc.):\n"
+                    f"{chr(10).join(f'- {e["name"]}: {e["date"]} | Location: {e["location"]} | Cost: {e["cost"]} | {e["description"]}' + (f' | Link: {e["link"]}' if e.get("link") else '') for e in ALL_EVENTS)}\n\n"
                     f"IMPORTANT LINKS RULE:\n"
                     f"- When providing recommendations, ALWAYS include real, working website links where available.\n"
+                    f"- When asked about events, festivals, or things to do, ALWAYS reference the upcoming events list above with dates, locations, ticket costs, and links.\n"
                     f"- Provide reviews and ratings when you can (e.g., 'highly rated', 'popular with visitors').\n"
                     f"- Recommend checking https://www.visitbarbados.org for the latest official tourism info.\n"
                     f"- If you don't have a specific link, say so and suggest where to search."

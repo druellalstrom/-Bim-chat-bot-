@@ -1,0 +1,92 @@
+[
+  {
+    "name": "Crop Over Festival 2026",
+    "date": "June 28 – August 3, 2026",
+    "location": "Island-wide, Barbados",
+    "cost": "Free (street events) / $50–$350 BBD (fêtes & bands)",
+    "description": "Barbados' biggest cultural festival celebrating the end of the sugar cane harvest. Features calypso, soca music, Kadooment Day parade, and more.",
+    "link": "https://www.visitbarbados.org/crop-over",
+    "category": "Festival"
+  },
+  {
+    "name": "Kadooment Day 2026",
+    "date": "August 3, 2026",
+    "location": "Spring Garden Highway, Bridgetown",
+    "cost": "$200–$500 BBD (band costumes) / Free to spectate",
+    "description": "The grand finale of Crop Over — a massive costumed street parade with soca music, DJs, and dancing from the National Stadium to Spring Garden.",
+    "link": "https://www.visitbarbados.org/crop-over",
+    "category": "Festival"
+  },
+  {
+    "name": "Oistins Fish Festival 2026",
+    "date": "April 3 – April 6, 2026",
+    "location": "Oistins Bay Garden, Christ Church",
+    "cost": "Free entry",
+    "description": "Annual Easter weekend festival celebrating Barbados' fishing heritage. Fish-boning competitions, boat races, live music, food stalls, and cultural activities.",
+    "link": "https://www.visitbarbados.org",
+    "category": "Cultural"
+  },
+  {
+    "name": "Reggae Festival Barbados 2026",
+    "date": "April 25 – April 27, 2026",
+    "location": "Farley Hill National Park, St. Peter",
+    "cost": "$75–$200 BBD per day / Weekend pass $350 BBD",
+    "description": "Three days of reggae, dancehall, and Caribbean music featuring international and local artists in the stunning Farley Hill ruins.",
+    "link": "https://www.visitbarbados.org",
+    "category": "Music"
+  },
+  {
+    "name": "Barbados Food & Rum Festival 2026",
+    "date": "October 22 – October 25, 2026",
+    "location": "Various venues island-wide",
+    "cost": "$100–$400 BBD per event",
+    "description": "A culinary celebration featuring top Caribbean and international chefs, rum tastings, beach dinners, and cooking demonstrations.",
+    "link": "https://www.visitbarbados.org/food-and-rum",
+    "category": "Food & Drink"
+  },
+  {
+    "name": "Run Barbados Marathon Weekend",
+    "date": "December 5 – December 6, 2026",
+    "location": "Bridgetown (start/finish at Bay Street)",
+    "cost": "$50–$120 USD registration",
+    "description": "Annual marathon, half marathon, and 10K run through scenic Bridgetown and along the coast. Open to international runners.",
+    "link": "https://www.runbarbados.org",
+    "category": "Sports"
+  },
+  {
+    "name": "Holders Season 2026",
+    "date": "March 2026 (recurring annually)",
+    "location": "Holders House, St. James",
+    "cost": "$75–$250 BBD per show",
+    "description": "Performing arts festival featuring opera, Shakespeare, jazz, and comedy in the beautiful gardens of Holders House plantation.",
+    "link": "https://www.holders.net",
+    "category": "Arts"
+  },
+  {
+    "name": "Barbados Independence Day Celebrations",
+    "date": "November 30, 2026",
+    "location": "Island-wide / Garrison Savannah, Bridgetown",
+    "cost": "Free",
+    "description": "National holiday celebrating Barbados' independence (1966). Military parade at the Garrison, flag-raising ceremonies, cultural shows, and fireworks.",
+    "link": "https://www.visitbarbados.org",
+    "category": "National Holiday"
+  },
+  {
+    "name": "Oistins Friday Night Fish Fry",
+    "date": "Every Friday (weekly)",
+    "location": "Oistins Bay Garden, Christ Church",
+    "cost": "Free entry / Food from $15–$40 BBD",
+    "description": "Barbados' most famous weekly liming spot. Fresh grilled fish, music, dancing, and a true local experience every Friday night.",
+    "link": "https://www.visitbarbados.org",
+    "category": "Weekly"
+  },
+  {
+    "name": "Sandy Lane Gold Cup 2026",
+    "date": "March 7, 2026",
+    "location": "Garrison Savannah Racetrack, Bridgetown",
+    "cost": "General $20 BBD / VIP $150–$500 BBD",
+    "description": "The premier horse racing event in Barbados. A day of exciting races, fashion, and socializing at the historic Garrison Savannah.",
+    "link": "https://www.barbadosturfclub.org",
+    "category": "Sports"
+  }
+]
